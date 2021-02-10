@@ -21,9 +21,12 @@ public class QueryBasicTest {
     @Autowired
     EntityManager em;
 
+    JPAQueryFactory queryFactory;
+
     @BeforeEach
     public void before() {
 
+        queryFactory = new JPAQueryFactory(em);
         Team teamA = new Team("teamA");
         Team teamB = new Team("teamB");
         em.persist(teamA);
@@ -58,14 +61,24 @@ public class QueryBasicTest {
     @Test
     public void startQuerydsl() throws Exception {
 
-        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-        QMember m = new QMember("m");
-
+        //인스턴스로
+        QMember m = QMember.member;
         Member findMember = queryFactory
-                .select(m)
-                .from(m)
-                .where(m.username.eq("member1"))
+                .select(QMember.member)
+                .from(QMember.member)
+                .where(QMember.member.username.eq("member1"))
                 .fetchOne();
+
+
+
+        //별칭 직접 지정
+        //QMember m = new QMember("m");
+
+//        Member findMember = queryFactory
+//                .select(m)
+//                .from(m)
+//                .where(m.username.eq("member1"))
+//                .fetchOne();
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
     }
