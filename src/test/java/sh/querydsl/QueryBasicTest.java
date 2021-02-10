@@ -63,6 +63,7 @@ public class QueryBasicTest {
     public void startQuerydsl() throws Exception {
 
 
+        //기본 인스턴스를 static import로 작성
         QMember m = member;
         Member findMember = queryFactory
                 .select(member)
@@ -92,4 +93,32 @@ public class QueryBasicTest {
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
     }
+
+    @Test
+    public void search() throws Exception {
+
+        Member findMember = queryFactory
+                .selectFrom(member)
+                .where(member.username.eq("member1")
+                        .and(member.age.eq(10)))
+                .fetchOne();
+
+        assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
+
+    //and의 또 다른 방법
+    @Test
+    public void searchAndParam() throws Exception {
+
+        Member findMember = queryFactory
+                .selectFrom(member)
+                .where(
+                        member.username.eq("member1"),
+                        member.age.eq(10)
+                        )
+                .fetchOne();
+
+        assertThat(findMember.getUsername()).isEqualTo("member1");
+    }
+
 }
