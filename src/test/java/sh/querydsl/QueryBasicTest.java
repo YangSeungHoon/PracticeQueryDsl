@@ -181,10 +181,35 @@ public class QueryBasicTest {
         assertThat(member5.getUsername()).isEqualTo("member5");
         assertThat(member6.getUsername()).isEqualTo("member6");
         assertThat(memberNull.getUsername()).isNull();
+    }
 
+    @Test
+    public void paging1() throws Exception {
 
-        // then
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .orderBy(member.username.desc()) //유저 이름 기준 내림차순
+                .offset(1) //0부터 시작이니까 앞에 1개 스킵하고 1부터
+                .limit(2) //2 까지
+                .fetch();
 
+        assertThat(result.size()).isEqualTo(2); //1,2 두개.
+    }
+
+    @Test
+    public void paging2() throws Exception {
+
+        QueryResults<Member> result = queryFactory
+                .selectFrom(member)
+                .orderBy(member.username.desc()) //유저 이름 기준 내림차순
+                .offset(1) //0부터 시작이니까 앞에 1개 스킵하고 1부터
+                .limit(2) //2 까지
+                .fetchResults();
+
+        assertThat(result.getTotal()).isEqualTo(4);
+        assertThat(result.getLimit()).isEqualTo(2);
+        assertThat(result.getOffset()).isEqualTo(1);
+        assertThat(result.getResults().size()).isEqualTo(2);
     }
 
 
