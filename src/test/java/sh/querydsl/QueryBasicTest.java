@@ -61,23 +61,13 @@ public class QueryBasicTest {
     @Test
     public void startQuerydsl() throws Exception {
 
-
-
-        //기본 인스턴스를 static import와 함께 사용 가능.
+        //인스턴스로
+        QMember m = QMember.member;
         Member findMember = queryFactory
                 .select(QMember.member)
                 .from(QMember.member)
                 .where(QMember.member.username.eq("member1"))
                 .fetchOne();
-
-
-        //인스턴스로
-        //QMember m = QMember.member;
-//        Member findMember = queryFactory
-//                .select(QMember.member)
-//                .from(QMember.member)
-//                .where(QMember.member.username.eq("member1"))
-//                .fetchOne();
 
 
 
