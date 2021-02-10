@@ -13,6 +13,7 @@ import sh.querydsl.entity.Team;
 import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static sh.querydsl.entity.QMember.*;
 
 @SpringBootTest
 @Transactional
@@ -61,13 +62,22 @@ public class QueryBasicTest {
     @Test
     public void startQuerydsl() throws Exception {
 
-        //인스턴스로
-        QMember m = QMember.member;
+
+        QMember m = member;
         Member findMember = queryFactory
-                .select(QMember.member)
-                .from(QMember.member)
-                .where(QMember.member.username.eq("member1"))
+                .select(member)
+                .from(member)
+                .where(member.username.eq("member1"))
                 .fetchOne();
+
+
+        //        //인스턴스로
+//        QMember m = QMember.member;
+//        Member findMember = queryFactory
+//                .select(QMember.member)
+//                .from(QMember.member)
+//                .where(QMember.member.username.eq("member1"))
+//                .fetchOne();
 
 
 
