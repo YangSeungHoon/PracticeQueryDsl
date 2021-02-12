@@ -3,6 +3,7 @@ package sh.querydsl;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -505,6 +506,37 @@ public class QueryBasicTest {
     // 서브쿼리를 join으로 변경한다.(가능한 상황도 있고, 불가능한 상황도 있음.)
     // 애플리케이션에서 쿼리를 2번 분리해서 사용한다
     // nativeSQL을 사용한다.
+
+
+    //상수 사용하기 Expressions.constant
+    @Test
+    public void constant() throws Exception {
+
+        List<Tuple> result = queryFactory
+                .select(member.username, Expressions.constant("A"))
+                .from(member)
+                .fetch();
+
+        for (Tuple tuple : result) {
+            System.out.println("tuple = " + tuple);
+        }
+    }
+
+    //문자 더하기 concat,StringValue(enum타입에도 사용할 수 있다.)
+    @Test
+    public void concat() throws Exception {
+
+        //{username}_{age}
+        List<String> result = queryFactory
+                .select(member.username.concat("_").concat(member.age.stringValue()))
+                .from(member)
+                .where(member.username.eq("member1"))
+                .fetch();
+
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
 
 
 }
