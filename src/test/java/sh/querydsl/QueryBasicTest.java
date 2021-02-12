@@ -762,4 +762,50 @@ public class QueryBasicTest {
 
         return usernameEq(usernameCond).and(ageEq(ageCond));
     }
+
+
+    //bulk연산은 영속성 컨텍스트를 거치지 않고 바로 DB로 쿼리를 날리기 때문에
+    //em.flush, em.clear를 통해 영속성 컨텍스트를 DB와 맞춰주고, 그 이후에 값을 가져오게 해야한다.
+    // 물론 bulk연산을 하면 DB의 값은 update가 되어있다. 다만 영속성 컨텍스트의 값이 안바뀌어 있는 것이 문제.
+    @Test
+    public void bulkUpdate() throws Exception {
+
+        long count = queryFactory
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))//28살 미만이면
+                .execute();
+
+        em.flush();
+        em.clear();
+
+        List<Member> result = queryFactory
+                .select(member)
+                .fetch();
+
+        for (Member member1 : result) {
+            System.out.println("member1 = " + member1);
+        }
+    }
+
+    @Test
+    public void bulkAdd() throws Exception {
+
+        long count = queryFactory
+                .update(member)
+                .set(member.age, member.age.add(1))// 더하기 => add // 곱하기 => multiplay
+                .execute();
+    }
+
+    @Test
+    public void bulkDelete() throws Exception {
+
+        long count = queryFactory
+                .delete(member)
+                .where(member.age.gt(18)) //18살 이상
+                .execute();
+
+    }
+
+
 }
