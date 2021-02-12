@@ -807,5 +807,43 @@ public class QueryBasicTest {
 
     }
 
+    //SQL function은 JPA와 같이 Dialect에 등록된 내용만 호출 할 수 있다.
+    //member -> M으로 변경하는 replace함수 사용
+    @Test
+    public void sqlFunction() throws Exception {
+
+        List<String> result = queryFactory
+                .select(Expressions.stringTemplate(
+                        "function('replace',{0},{1},{2})",
+                        member.username, "member", "M"))
+                .from(member)
+                .fetch();
+
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    @Test
+    public void sqlFunction2() throws Exception {
+
+//        List<String> result = queryFactory
+//                .select(member.username)
+//                .from(member)
+//                .where(member.username.eq(
+//                        Expressions.stringTemplate("function('lower',{0})", member.username)))
+//                .fetch();
+
+        //위랑 똑같은 거.
+        List<String> result = queryFactory
+                .select(member.username)
+                .from(member)
+                .where(member.username.eq(member.username.lower()))
+                .fetch();
+
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
 
 }
