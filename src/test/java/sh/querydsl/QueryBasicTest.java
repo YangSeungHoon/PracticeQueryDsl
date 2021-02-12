@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import sh.querydsl.dto.MemberDto;
+import sh.querydsl.dto.QMemberDto;
 import sh.querydsl.dto.UserDto;
 import sh.querydsl.entity.Member;
 import sh.querydsl.entity.QMember;
@@ -669,4 +670,20 @@ public class QueryBasicTest {
             System.out.println("userDto = " + userDto);
         }
     }
+
+    //어노테이션을 붙이고, Q파일을 생성해서 해결하는 방법.
+    //단점으로는 dto가 QueryDsl에 의존하게되는 것이 있다.
+    @Test
+    public void findDtoByQueryProjection() throws Exception {
+
+        List<MemberDto> result = queryFactory
+                .select(new QMemberDto(member.username, member.age))
+                .from(member)
+                .fetch();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
+    }
+
 }
