@@ -1,6 +1,7 @@
 package sh.querydsl.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import sh.querydsl.entity.Member;
 import sh.querydsl.entity.QMember;
@@ -12,14 +13,16 @@ import java.util.Optional;
 import static sh.querydsl.entity.QMember.member;
 
 @Repository
+//@RequiredArgsConstructor
 public class MemberJpaRepository {
 
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
 
-    public MemberJpaRepository(EntityManager em) {
+    //이 코드 대신에 위에 @RequiredArgsConstructor 사용 가능.
+    public MemberJpaRepository(EntityManager em,JPAQueryFactory queryFactory) {
         this.em = em;
-        this.queryFactory = new JPAQueryFactory(em);
+        this.queryFactory = queryFactory;
     }
 
     public void save(Member member) {
